@@ -21,21 +21,17 @@
 
 @implementation MoviesViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    [self.activityIndicator startAnimating];
-}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    [self.activityIndicator startAnimating];
     [self fetchMovies];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
-    
-    [self.activityIndicator stopAnimating];
 }
 
 -(void)fetchMovies {
@@ -55,6 +51,7 @@
                [self.tableView reloadData];
            }
         [self.refreshControl endRefreshing];
+        [self.activityIndicator stopAnimating];
        }];
     [task resume];
 }
@@ -92,7 +89,6 @@
     return cell;
 }
 
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -104,6 +100,7 @@
     NSDictionary *movie = self.movies[indexPath.row];
     DetailsViewController *detailsViewController = [segue destinationViewController];
     detailsViewController.movie = movie;
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end
