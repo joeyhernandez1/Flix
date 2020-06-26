@@ -45,6 +45,8 @@
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
            if (error != nil) {
                NSLog(@"%@", [error localizedDescription]);
+             
+               [self networkError];
            }
            else {
                NSDictionary *dataDictionary = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
@@ -55,6 +57,17 @@
         [self.refreshControl endRefreshing];
        }];
     [task resume];
+}
+
+-(void) networkError{
+      UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Network Error" message:@"There  is something wrong with your connection, try again." preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *tryAgainAction = [UIAlertAction actionWithTitle:@"Try Again" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        [self fetchMovies];
+    }];
+    
+    [alert addAction:tryAgainAction];
+    [self presentViewController:alert animated:YES completion:^{}];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
