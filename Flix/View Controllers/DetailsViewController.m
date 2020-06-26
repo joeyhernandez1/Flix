@@ -30,7 +30,14 @@
     NSURL *posterURL = [NSURL URLWithString:fullPosterURLString];
     [self.posterView setImageWithURL:posterURL];
     
-    NSString *backdropURLString = self.movie[@"backdrop_path"];
+    NSString *backdropURLString;
+    // If there is no backdrop for this movie, use its poster as backdrop.
+    if ([self.movie[@"backdrop_path"] isKindOfClass:[NSString class]]) {
+       backdropURLString = self.movie[@"backdrop_path"];
+    } else {
+        backdropURLString = self.movie[@"poster_path"];
+    }
+    
     NSString *fullBackdropURLString = [baseURLString stringByAppendingString:backdropURLString];
     NSURL *backdropURL = [NSURL URLWithString:fullBackdropURLString];
     [self.backDropView setImageWithURL:backdropURL];
