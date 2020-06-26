@@ -13,6 +13,7 @@
 
 @interface MoviesViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray *movies;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -20,10 +21,12 @@
 
 @implementation MoviesViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self.activityIndicator startAnimating];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self fetchMovies];
@@ -31,6 +34,8 @@
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(fetchMovies) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
+    
+    [self.activityIndicator stopAnimating];
 }
 
 -(void)fetchMovies {
